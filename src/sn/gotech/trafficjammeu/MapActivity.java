@@ -1,5 +1,6 @@
 package sn.gotech.trafficjammeu;
 
+<<<<<<< HEAD
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,10 +35,17 @@ public class MapActivity extends Activity implements OnMapLongClickListener {
 	private GoogleMap map;
 	private UiSettings mapSettings;
 	private ArrayList<LatLng> markerPoints;
+=======
+import android.app.Activity;
+import android.os.Bundle;
+
+public class MapActivity extends Activity {
+>>>>>>> eed5b74ad7b0c890eb37378cacf937952a752f83
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+<<<<<<< HEAD
         setContentView(R.layout.map_fragment); 
         
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap(); 
@@ -253,4 +261,8 @@ public class MapActivity extends Activity implements OnMapLongClickListener {
 			}
 		}			
     }   
+=======
+        setContentView(sn.gotech.trafficjammeu.R.layout.main);
+    }
+>>>>>>> eed5b74ad7b0c890eb37378cacf937952a752f83
 }

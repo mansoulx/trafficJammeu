@@ -146,10 +146,13 @@ containing a value of this type.
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
+<<<<<<< HEAD
 
          Customize dimensions originally defined in res/values/dimens.xml (such as
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
+=======
+>>>>>>> eed5b74ad7b0c890eb37378cacf937952a752f83
          */
         public static final int activity_horizontal_margin=0x7f070000;
         public static final int activity_vertical_margin=0x7f070001;
@@ -191,11 +194,18 @@ containing a value of this type.
         public static final int terrain=0x7f050003;
     }
     public static final class layout {
+<<<<<<< HEAD
         public static final int map_fragment=0x7f030000;
     }
     public static final class menu {
         public static final int main=0x7f090000;
         public static final int map=0x7f090001;
+=======
+        public static final int main=0x7f030000;
+    }
+    public static final class menu {
+        public static final int map=0x7f090000;
+>>>>>>> eed5b74ad7b0c890eb37378cacf937952a752f83
     }
     public static final class string {
         public static final int action_settings=0x7f060016;
@@ -289,6 +299,7 @@ containing a value of this type.
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         
+<<<<<<< HEAD
 
         Base application theme for API 11+. This theme completely replaces
         AppBaseTheme from res/values/styles.xml on API 11+ devices.
@@ -300,6 +311,8 @@ containing a value of this type.
         res/values-v11/styles.xml on API 14+ devices.
     
  API 14 theme customizations can go here. 
+=======
+>>>>>>> eed5b74ad7b0c890eb37378cacf937952a752f83
          */
         public static final int AppBaseTheme=0x7f080000;
         /**  Application theme. 

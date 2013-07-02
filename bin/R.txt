@@ -58,9 +58,14 @@ int id none 0x7f050000
 int id normal 0x7f050001
 int id satellite 0x7f050002
 int id terrain 0x7f050003
+<<<<<<< HEAD
 int layout map_fragment 0x7f030000
 int menu main 0x7f090000
 int menu map 0x7f090001
+=======
+int layout main 0x7f030000
+int menu map 0x7f090000
+>>>>>>> eed5b74ad7b0c890eb37378cacf937952a752f83
 int string action_settings 0x7f060016
 int string app_name 0x7f060015
 int string auth_client_availability_notification_title 0x7f06000f
