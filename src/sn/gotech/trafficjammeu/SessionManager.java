@@ -23,7 +23,7 @@ public class SessionManager {
     private static final String PREF_NAME = "trafficJammeuPreferences";
     private static final int DEFAULT_ZOOM_SIZE = 17;
     private static final float DEFAULT_DRAW_WIDTH = 7;
-    private static final int DEFAULT_DRAW_COLOR = Color.RED;
+    private static final int DEFAULT_DRAW_COLOR = Color.BLUE;
     public static final String KEY_UID = "uid";
     public static final String KEY_DRAW_COLOR = "draw_color";
     public static final String KEY_ZOOM_SIZE = "zoom_size";
@@ -34,6 +34,7 @@ public class SessionManager {
 	private static final double DEFAULT_ANIMATE_TO_LNG = -17;
 	private static final String KEY_DRAW_WIDTH = "draw_width";
 	private static final int DEFAULT_VIEW_TYPE = GoogleMap.MAP_TYPE_NORMAL;
+	private static final String KEY_TUTO_SHOWN = "tuto_shown";
     private static String IS_SESSION_ACTIVED = "is_session_active";
     private static int PRIVATE_MODE = 0;
 
@@ -51,6 +52,14 @@ public class SessionManager {
         editor.commit();
     }
     
+    public boolean isTutoShown(){
+    	return pref.getBoolean(KEY_TUTO_SHOWN, false);
+    }
+    
+    public void setTutoShown(boolean shown){
+    	editor.putBoolean(KEY_TUTO_SHOWN, shown);
+    	editor.commit();
+    }
     
     public void setDrawColor(int color) {
     	editor.putInt(KEY_DRAW_COLOR, color);
@@ -100,31 +109,7 @@ public class SessionManager {
     public String generateID(){
     	return UUID.randomUUID().toString();
     }
-    
-    public boolean wsCreateFolder(){
-    	
-    	boolean result = false;
-    	
-    	DefaultHttpClient httpClient = new DefaultHttpClient();
-		HttpPost httpPost = new HttpPost(
-				"URL_WS"
-						+ "uid=" + getUID()
-				);
-											
-		try {
-			httpClient.execute(httpPost);
-			result = true;
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return result;
-    }
-    
+        
     public int getDefaultViewType() {
     	return pref.getInt(KEY_VIEW_TYPE, DEFAULT_VIEW_TYPE);
     }

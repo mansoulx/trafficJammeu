@@ -1,6 +1,5 @@
 package sn.gotech.trafficjammeu;
 
-<<<<<<< HEAD
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,15 +9,19 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
@@ -28,6 +31,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+
 public class MapActivity extends Activity implements OnMapLongClickListener {
 
 	static final LatLng HAMBURG = new LatLng(53.558, 9.927);
@@ -35,28 +39,24 @@ public class MapActivity extends Activity implements OnMapLongClickListener {
 	private GoogleMap map;
 	private UiSettings mapSettings;
 	private ArrayList<LatLng> markerPoints;
-=======
-import android.app.Activity;
-import android.os.Bundle;
-
-public class MapActivity extends Activity {
->>>>>>> eed5b74ad7b0c890eb37378cacf937952a752f83
+	private SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-<<<<<<< HEAD
         setContentView(R.layout.map_fragment); 
+        session = new SessionManager(getApplicationContext());
         
-        map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap(); 
+        manageUserInfo();
+        manageTuto();
         configureMap();
-        map.setOnMapLongClickListener(this);
-            
     }
     
 	public boolean configureMap() {
-		boolean mReturn = false;
+		
+		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 		markerPoints = new ArrayList<LatLng>();
+		boolean mReturn = false;
 		if (map != null) {
 			map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 			mapSettings = map.getUiSettings();
@@ -64,11 +64,45 @@ public class MapActivity extends Activity {
 			mapSettings.setRotateGesturesEnabled(true);
 			mapSettings.setZoomControlsEnabled(true);
 			map.setMyLocationEnabled(true);
+			
+
+	        map.setOnMapLongClickListener(this);
 			mReturn = true;
 		}
 		return mReturn;
 	}
 
+	public void manageTuto(){
+		if(!session.isTutoShown()){
+        	LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        	View view = inflater.inflate(R.layout.tuto_layout, null);
+        	final LinearLayout ll = (LinearLayout) findViewById(R.id.mainLayout);
+        	ll.addView(view);
+        	ll.setVisibility(View.VISIBLE);
+        	
+        	Button closeButton = (Button) view.findViewById(R.id.closeButton);
+        	final CheckBox checkBox = (CheckBox) view.findViewById(R.id.doNotShowAgain);
+        	
+        	closeButton.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					ll.setVisibility(View.GONE);
+					if(checkBox.isChecked()) {
+		        		session.setTutoShown(true);
+		        	}
+				}
+			});
+        }
+	}
+	
+	public void manageUserInfo(){
+		if(!session.hasUID()){
+			Toast.makeText(this, "set user info huna", 5000).show();
+		}
+	}
+	
 	public MarkerOptions createMarkerOptions(String title, String snippet, LatLng position, boolean draggable){
 		MarkerOptions markerOptions = new MarkerOptions();
 		markerOptions
@@ -96,7 +130,6 @@ public class MapActivity extends Activity {
 				downloadTask.execute(url);
 			}
 		}
-		
 	}
 	
 	public boolean isOdd(int size) {
@@ -228,41 +261,38 @@ public class MapActivity extends Activity {
 		protected void onPostExecute(List<List<HashMap<String, String>>> result) {
 			ArrayList<LatLng> points = null;
 			PolylineOptions lineOptions = new PolylineOptions();
-			MarkerOptions markerOptions = new MarkerOptions();
 			
 			// Traversing through all the routes
-			for(int i=0;i<result.size();i++){
-				points = new ArrayList<LatLng>();
-				
-				// Fetching i-th route
-				List<HashMap<String, String>> path = result.get(i);
-				
-				// Fetching all the points in i-th route
-				for(int j=0;j<path.size();j++){
-					HashMap<String,String> point = path.get(j);					
+			if(result != null) {
+				for(int i=0;i<result.size();i++){
+					points = new ArrayList<LatLng>();
 					
-					double lat = Double.parseDouble(point.get("lat"));
-					double lng = Double.parseDouble(point.get("lng"));
-					LatLng position = new LatLng(lat, lng);	
+					// Fetching i-th route
+					List<HashMap<String, String>> path = result.get(i);
 					
-					points.add(position);						
+					// Fetching all the points in i-th route
+					for(int j=0;j<path.size();j++){
+						HashMap<String,String> point = path.get(j);					
+						
+						double lat = Double.parseDouble(point.get("lat"));
+						double lng = Double.parseDouble(point.get("lng"));
+						LatLng position = new LatLng(lat, lng);	
+						
+						points.add(position);						
+					}
+					
+					// Adding all the points in the route to LineOptions
+					lineOptions.addAll(points);
+					lineOptions.width(session.getDrawWidth());
+					lineOptions.color(session.getDrawColor());
+					
 				}
 				
-				// Adding all the points in the route to LineOptions
-				lineOptions.addAll(points);
-				lineOptions.width(2);
-				lineOptions.color(Color.RED);	
-				
-			}
-			
-			// Drawing polyline in the Google Map for the i-th route
-			if(lineOptions != null){
-				map.addPolyline(lineOptions);							
+				// Drawing polyline in the Google Map for the i-th route
+				if(lineOptions != null){
+					map.addPolyline(lineOptions);							
+				}
 			}
 		}			
     }   
-=======
-        setContentView(sn.gotech.trafficjammeu.R.layout.main);
-    }
->>>>>>> eed5b74ad7b0c890eb37378cacf937952a752f83
 }
